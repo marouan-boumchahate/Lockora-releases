@@ -1,7 +1,7 @@
 # Lockora — Official Release Mirror & Distribution Center
 
 <p align="center">
-  <img src="/images/Lockora.png" alt="Lockora Logo" width="120" height="120" />
+  <img src="/Lockora.png" alt="Lockora Logo" width="120" height="120" />
 </p>
 
 <p align="center">
