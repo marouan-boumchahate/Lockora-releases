@@ -1,7 +1,7 @@
 # Lockora — Official Release Mirror & Distribution Center
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marouanboumchahate/lockora-web/main/public/images/Lockora.png" alt="Lockora Logo" width="120" height="120" />
+  <img src="/images/Lockora.png" alt="Lockora Logo" width="120" height="120" />
 </p>
 
 <p align="center">
