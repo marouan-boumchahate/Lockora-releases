@@ -9,11 +9,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/marouanboumchahate/Lockora-releases/releases/latest">
-    <img src="https://img.shields.io/github/v/release/marouanboumchahate/Lockora-releases?style=for-the-badge&color=10B981&label=Latest%20Release" alt="Latest Release" />
+  <a href="https://github.com/marouan-boumchahate/Lockora-releases/releases/latest">
+    <img src="https://img.shields.io/github/v/release/marouan-boumchahate/Lockora-releases?style=for-the-badge&color=10B981&label=Latest%20Release" alt="Latest Release" />
   </a>
-  <a href="https://github.com/marouanboumchahate/Lockora-releases/releases">
-    <img src="https://img.shields.io/github/downloads/marouanboumchahate/Lockora-releases/total?style=for-the-badge&color=60A5FA&label=Downloads" alt="Total Downloads" />
+  <a href="https://github.com/marouan-boumchahate/Lockora-releases/releases">
+    <img src="https://img.shields.io/github/downloads/marouan-boumchahate/Lockora-releases/total?style=for-the-badge&color=60A5FA&label=Downloads" alt="Total Downloads" />
+  </a>
+  <a href="https://lockora.duckdns.org/">
+    <img src="https://img.shields.io/badge/Web%20Deployment-lockora.duckdns.org-2563EB?style=for-the-badge" alt="Web Deployment" />
   </a>
   <img src="https://img.shields.io/badge/Security-Zero--Trust%20Local-10B981?style=for-the-badge" alt="Zero Trust" />
   <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-0A1628?style=for-the-badge" alt="Platforms" />
@@ -21,96 +24,115 @@
 
 ---
 
-## 📌 About This Repository
+## About This Repository
 
-This is the **official binary release distribution center** for **Lockora**. Official signed Android application packages (`.apk`), checksum hashes, release notes, and cryptographic signatures are published directly to this repository's [Releases Page](https://github.com/marouanboumchahate/Lockora-releases/releases).
+This repository serves as the official distribution center and binary release mirror for **Lockora**. Cryptographically signed Android application packages (`.apk`), cryptographic checksums, detached PGP signatures, and release notes are published directly to this repository's [Releases Portal](https://github.com/marouan-boumchahate/Lockora-releases/releases).
 
 > [!NOTE]  
 > **Source Code Privacy Notice:**  
-> The core source code of the Lockora mobile application remains strictly proprietary and private to protect proprietary implementation details and key security tooling. All release binaries published here are cryptographically signed and checksum-verified to ensure absolute authenticity and tamper protection.
+> The core source code of the Lockora mobile application remains strictly proprietary to safeguard cryptographic implementation nuances and internal security tooling. All binaries distributed through this channel are deterministically signed, checksum-verified, and authenticated to guarantee software supply chain integrity.
 
 ---
 
-## 🛡️ Core Security Architecture & Specifications
+## Core Security Architecture & Specifications
 
-Lockora is built from the ground up on a **Zero-Trust, Local-First** security model using **React Native & Expo (SDK 54)**.
+Lockora is architected from the ground up on a **Zero-Trust, Local-First** security model implemented via **React Native (0.88) & Expo SDK 58**.
 
-| Component | Technical Specification | Security & Standards Standard |
+| Component | Technical Specification | Standard & Cryptographic Guarantee |
 | :--- | :--- | :--- |
-| **Key Derivation (KDF)** | PBKDF2-HMAC-SHA256 | **NIST SP 800-63B Compliant** — `310,000` iterations, 16-byte random salt, 32-byte derived key length. |
-| **Native Execution** | `react-native-quick-crypto` | Native C++ compiled PBKDF2 execution to eliminate JS thread overhead. |
-| **Side-Channel Protection** | Constant-Time Validation | Byte-by-byte XOR comparison loop (`timingSafeEqual`) to prevent timing side-channel attacks. |
-| **Symmetric Payload Cipher** | AES-256 in CBC mode | End-to-end client-side zero-knowledge encryption before persistence in local runtime storage (`AsyncStorage`). |
-| **Key Tree Derivation** | BIP-39 & HD Key Tree | 12-word seed phrase (`128 bits` entropy) deriving `m/0'/0` (Identity Key) and `m/1'/0` (Vault Encryption Key). |
-| **Randomness Source** | Hardware CSPRNG Patch | Monkey-patched CryptoJS WordArray RNG backed by hardware `ExpoCrypto.getRandomBytes()`. |
-| **Session Protection** | Monotonic Relative Timer | High-resolution `performance.now()` timer resisting OS clock manipulation; auto-locks on backgrounding & inactivity. |
-| **Audit Engine** | `zxcvbn` Scoring & Risk Audit | Real-time strength scoring, duplicate credential detector, and 90-day stale password warnings. |
-| **Password Generator** | Entropy Floor Enforcer | Dynamic pool sizing guaranteeing a minimum floor of **60 bits of entropy** via Fisher-Yates array shuffling. |
-| **Backup & Export** | Dual-Format Importer/Exporter | Structured JSON backups (`.lockora`) & styled printable landscape PDF reports generated via `expo-print`. |
+| **Key Derivation Function (KDF)** | PBKDF2-HMAC-SHA256 | **NIST SP 800-63B Compliant** — 310,000 iterations, 16-byte cryptographically secure salt, 32-byte derived key. |
+| **Native Cryptographic Acceleration** | `react-native-quick-crypto` | Native C++ execution bindings for PBKDF2 and AES operations, eliminating JavaScript bridge latency and memory leakage risks. |
+| **Side-Channel Attack Mitigation** | Constant-Time Evaluation | Byte-by-byte XOR comparison (`timingSafeEqual`) across all passphrase validations and hash verifications to prevent timing analysis. |
+| **Authenticated Payload Cipher** | AES-256-GCM (AEAD) | Native authenticated encryption with 96-bit CSPRNG nonces and 128-bit authentication tags, preventing ciphertext bit-flipping attacks. |
+| **Deterministic Key Hierarchy** | BIP-39 & HD Key Derivation | 12-word mnemonic seed (128 bits of initial entropy) deriving `m/0'/0` (Identity Key) and `m/1'/0` (Vault Encryption Key). |
+| **Cryptographic Entropy Source** | Hardware CSPRNG | Entropy generated directly from platform hardware via `ExpoCrypto.getRandomBytes()`. |
+| **Hardware Keystore & Biometrics** | Hardware Secure Enclave | Biometric authentication (Fingerprint, Face ID, Touch ID) via `expo-local-authentication` and key encapsulation in `expo-secure-store`. |
+| **Session Protection** | Monotonic Relative Clock | High-precision `performance.now()` monotonic timers immune to OS system clock manipulation; automatic vault locking on inactivity or background state. |
+| **Memory Buffer Sanitation** | Volatile Clipboard Scrubbing | In-memory countdown timer automatically purges copied credentials and secrets from the system clipboard after 60 seconds. |
+| **Smart Security & PIN Auditor** | Real-Time Vulnerability Analysis | Dual audit engines evaluating password entropy (`zxcvbn`), duplicate passwords, 90-day stale credentials, and numeric PIN pattern exploits. |
+| **Cryptographic Generator** | Entropy Floor Enforcement | Dynamic character pool selection enforcing a strict minimum floor of 60 bits of entropy via Fisher-Yates array shuffling. |
+| **In-App Update Engine** | Authenticated GitHub API Checks | Direct release tag checking against the official release repository; vault contents and sensitive data remain strictly offline. |
+| **Data Portability** | Dual-Format Importer / Exporter | Client-side encrypted JSON archives (`.lockora`) and structured printable cryptographic backup reports. |
 
 ---
 
-## 🚀 Quick Download Links
+## Release Downloads & Direct Links
 
-| Asset | Format | Target Platform | Latest Version |
+The current release version is dynamically tracked via the repository release pipeline. Production binaries, checksum manifests, and detached signatures are available below:
+
+| Distribution Asset | Format | Target Environment | Latest Version |
 | :--- | :--- | :--- | :--- |
-| **Official Android Release** | `.apk` | Android 8.0 (Oreo) or higher | [v1.0.0 Download](https://github.com/marouanboumchahate/Lockora-releases/releases/download/v1.0.0/lockora-v1.0.0.apk) |
-| **SHA-256 Checksum** | `.txt` / `.sha256` | Terminal / Hash Checkers | [View SHA-256](https://github.com/marouanboumchahate/Lockora-releases/releases/download/v1.0.0/lockora-v1.0.0.apk.sha256) |
-| **PGP Signature** | `.asc` | GnuPG Verification | [Download .asc](https://github.com/marouanboumchahate/Lockora-releases/releases/download/v1.0.0/lockora-v1.0.0.apk.asc) |
+| **Official Android Release** | `.apk` | Android 8.0 (API 26) or higher | [Download v2.2.0 APK](https://github.com/marouan-boumchahate/Lockora-releases/releases/download/v2.2.0/lockora-v2.2.0.apk) · [Latest Release Redirect](https://github.com/marouan-boumchahate/Lockora-releases/releases/latest) |
+| **SHA-256 Checksum** | `.txt` / `.sha256` | Hash Checkers / CLI | `c671e307e1bb34ede0ae60a6ba4fb69471c6769605de2646b82ebe27da389343` |
+| **PGP Signature** | `.asc` | GnuPG Verification | [Download v2.2.0 Signature](https://github.com/marouan-boumchahate/Lockora-releases/releases/download/v2.2.0/lockora-v2.2.0.asc) |
+| **Official Web Application** | HTTPS | Modern Web Browsers | [lockora.duckdns.org](https://lockora.duckdns.org/) |
+
+> [!TIP]
+> Always verify that your downloaded package hash matches the official cryptographic digest published in the release manifest prior to execution.
 
 ---
 
-## 🔒 Binary Verification & Integrity Guide
+## Binary Verification & Cryptographic Integrity
 
-Before installing any downloaded `.apk` package, always verify its SHA-256 cryptographic hash to ensure the binary has not been tampered with or corrupted during transit.
+To verify that the downloaded `.apk` package has not been tampered with or corrupted during transit, compute and compare its SHA-256 cryptographic digest before installation.
 
 ### 1. Verify SHA-256 Checksum (Linux / macOS Terminal)
 
 ```bash
-# Calculate the SHA-256 hash of your downloaded file
-sha256sum lockora-v1.0.0.apk
+sha256sum lockora-v2.2.0.apk
 ```
 
-**Expected Hash Value:**
+**Expected SHA-256 Hash:**
 ```text
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+c671e307e1bb34ede0ae60a6ba4fb69471c6769605de2646b82ebe27da389343
 ```
 
 ### 2. Verify SHA-256 Checksum (Windows PowerShell)
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\lockora-v1.0.0.apk
+Get-FileHash -Algorithm SHA256 .\lockora-v2.2.0.apk
 ```
 
-### 3. Verify PGP Signature (Optional)
+### 3. Auxiliary Hashes for Reference
+
+| Algorithm | Digest |
+| :--- | :--- |
+| **MD5** | `bc5238dc5bd9bb9f84035c7a4fadd341` |
+| **SHA-1** | `c71d0ae0bb74e1be5a8b5f7c65bdd3815e50e644` |
+
+### 4. Verify Detached PGP Signature (Optional)
 
 ```bash
-gpg --verify lockora-v1.0.0.apk.asc lockora-v1.0.0.apk
+gpg --verify lockora-v2.2.0.apk.asc lockora-v2.2.0.apk
 ```
 
----
-
-## 📱 Installation Guide (Android Sideloading)
-
-1. **Download:** Click the latest `.apk` download link above directly on your Android device.
-2. **Verify Checksum:** (Recommended) Check the SHA-256 hash using a mobile hash checker tool or terminal.
-3. **Allow Installation:** Open your Android **Settings > Apps & Security**, select your Browser/File Manager, and toggle **"Allow from this source"**.
-4. **Install & Verify:** Open `lockora-v1.0.0.apk` and tap Install.
-5. **Offline Onboarding:** Feel free to turn off Wi-Fi and Mobile Data to verify 100% local, offline operation. Save your **12-word BIP-39 recovery seed phrase** on paper during initial setup.
+- **Signer Identity:** Marouan Boumchahate (`marouanboumchahate@gmail.com`)
+- **Key Fingerprint / Key ID:** `BA48B90E2A10D8097B6454F21F492807B5BA4741`
 
 ---
 
-## 📧 Security Vulnerability Reporting & Contact
+## Installation & Sideloading Guide (Android)
 
-If you discover a security vulnerability or have feedback regarding Lockora's cryptographic design:
-
-- **Developer:** Marouan Boumchahate
-- **Contact Email:** [marouanboumchahate@gmail.com](mailto:marouanboumchahate@gmail.com)
-- **Official Web Landing:** [https://lockora.app](https://lockora.app)
+1. **Obtain Package:** Download `lockora-v2.2.0.apk` directly to your Android device from the release download link or the [Releases Portal](https://github.com/marouan-boumchahate/Lockora-releases/releases/latest).
+2. **Verify Digest:** Confirm that the package SHA-256 matches the official digest above using a terminal or mobile verification utility.
+3. **Authorize Package Installation:** Navigate to **Settings > Security > Install Unknown Apps** (or **Settings > Apps & Security** depending on your Android vendor), select your browser or file manager, and enable **"Allow from this source"**.
+4. **Deploy Application:** Open `lockora-v2.2.0.apk` and confirm the installation. If updating from an earlier v2 release, Android performs an in-place upgrade while preserving your encrypted vault database.
+5. **Offline Setup & Seed Custody:** You may disable Wi-Fi and mobile data during initial onboarding to verify zero network dependency. Securely write down your **12-word BIP-39 recovery mnemonic** on physical media during vault setup.
 
 ---
 
-## 📄 License & Legal Notice
+## Vulnerability Reporting & Contact
+
+Security inquiries, cryptographic peer reviews, and responsible vulnerability disclosure should be directed to the lead maintainer:
+
+- **Maintainer:** Marouan Boumchahate
+- **Security Contact:** [marouanboumchahate@gmail.com](mailto:marouanboumchahate@gmail.com)
+- **Official Web Deployment:** [https://lockora.duckdns.org/](https://lockora.duckdns.org/)
+- **Release Portal:** [https://github.com/marouan-boumchahate/Lockora-releases](https://github.com/marouan-boumchahate/Lockora-releases)
+
+---
+
+## License & Legal Terms
 
 © 2026 **Lockora Project** (Marouan Boumchahate). All Rights Reserved.  
-The compiled release binaries published in this repository are distributed solely for end-user installation. Reverse engineering, unauthorized repackaging, or redistribution with modified signatures without explicit written permission is strictly prohibited.
+Compiled release binaries and accompanying release distributions are provided strictly for end-user installation. Unauthorized decompilation, binary repackaging, key injection, or distribution with altered cryptographic signatures without explicit written authorization is prohibited.
